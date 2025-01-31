@@ -1,0 +1,30 @@
+const urlsToCache = [
+    "./index.html",
+    "./assets/logo.png",
+    "./assets/style.css"
+];
+const CACHE_NAME = "eissa-cache-v1";
+const urlsToCache = [
+    "./index.html", // Ensure this file exists
+    "./logo.png",   // Ensure this file exists
+    "./style.css"   // Add a CSS file if needed
+];
+
+// Install the service worker
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            console.log("Opened cache");
+            return cache.addAll(urlsToCache);
+        })
+    );
+});
+
+// Fetch and cache requests
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
+});
